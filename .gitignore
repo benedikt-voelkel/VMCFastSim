@@ -1,0 +1,9 @@
+# data
+*.root
+
+# libs
+*.so
+*.a
+
+# editor stuff
+*.swp
