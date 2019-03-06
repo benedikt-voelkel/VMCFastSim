@@ -4,7 +4,5 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class vmcfastsim::base::FastSim+;
-//#pragma link C++ class vmcfastsim::FastSimTrack+;
 
 #endif

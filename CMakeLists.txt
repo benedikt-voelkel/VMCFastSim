@@ -30,6 +30,7 @@ set(MACRO_SOURCE_DIR ${CMAKE_SOURCE_DIR}/macro)
 
 # Install paths
 set(INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+set(INSTALL_BINARY_DIR ${CMAKE_INSTALL_PREFIX}/bin)
 set(INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include/${MODULE_NAME})
 #set(INSTALL_MACRO_DIR ${CMAKE_INSTALL_PREFIX}/macro)
 # Collect for configure script
@@ -52,7 +53,7 @@ set(INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include/${MODULE_NAME})
 
 # NOTE Rely on $ENV{ROOTSYS} at the moment
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
-find_package(ROOT REQUIRED COMPONENTS Core RIO MathCore VMC)
+find_package(ROOT REQUIRED COMPONENTS Core RIO MathCore VMC EG)
 include(${ROOT_USE_FILE})
 # Include ROOT headers
 include_directories(${ROOT_INCLUDE_DIRS})
@@ -69,6 +70,7 @@ include_directories(${ROOT_INCLUDE_DIRS})
 ################################################################################
 
 # NOTE So far only based on ROOT
+message(STATUS "Derive CXX standard from ROOT installation")
 SET(CMAKE_CXX_STANDARD 11)
 execute_process(
     COMMAND $ENV{ROOTSYS}/bin/root-config --cflags
@@ -98,9 +100,7 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O2 -g")
 ################################################################################
 # HEADERS and LIBS sum everything required for building.
 # NOTE So far everything is compiled into one lib.
-set(SRCS
-    ${CXX_SOURCE_DIR}/FastSim.cxx
-)
+set(SRCS)
 set(HEADERS
    ${CXX_INCLUDE_DIR}/${MODULE_NAME}/FastSim.h
 )
@@ -141,8 +141,11 @@ SET(ROOT_DICT_LIB_FILES
 include_directories(${CXX_INCLUDE_DIR})
 set(LIBRARY_NAME ${MODULE_NAME})
 add_library(${LIBRARY_NAME} SHARED ${SRCS} "${ROOT_DICT_NAME}.cxx")
-target_link_libraries(${LIBRARY_NAME} ${LIBS})
+target_link_libraries(${LIBRARY_NAME} ${ROOT_LIBRARIES})
 list(APPEND _configure_shared_library_paths ${INSTALL_LIBRARY_DIR})
+
+#add_executable(run ${CXX_SOURCE_DIR}/run.cxx)
+#target_link_libraries(run ${LIBRARY_NAME})
 
 ################################################################################
 # Configure the config and setup script
@@ -168,5 +171,7 @@ list(APPEND _configure_shared_library_paths ${INSTALL_LIBRARY_DIR})
 install(FILES ${HEADERS} DESTINATION ${INSTALL_INCLUDE_DIR})
 # Install libraries
 install(TARGETS ${LIBRARY_NAME} DESTINATION ${INSTALL_LIBRARY_DIR})
+# Install binaries
+#install(TARGETS run DESTINATION ${INSTALL_BINARY_DIR})
 # Install the ROOT dictionary files
 install(FILES ${ROOT_DICT_LIB_FILES} DESTINATION ${INSTALL_LIBRARY_DIR})
