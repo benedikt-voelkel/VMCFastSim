@@ -16,6 +16,7 @@
 #include <TMCParticleStatus.h>
 #include <TVirtualMCStack.h>
 #include <TMCManagerStack.h>
+#include <TMCManager.h>
 
 
 
@@ -1335,7 +1336,7 @@ class FastSim : public TVirtualMC
    virtual void ProcessEvent(Int_t eventId) override
    {
      // Generate primaries/get particles from stack
-     if(!UseExternalParticleGeneration()) {
+     if(!TMCManager::Instance()) {
        fApplication->GeneratePrimaries();
      }
 
@@ -1364,7 +1365,7 @@ class FastSim : public TVirtualMC
      fMCStack = GetStack();
      fMCManagerStack = GetManagerStack();
      // Generate primaries/get particles from stack
-     if(!UseExternalParticleGeneration()) {
+     if(!TMCManager::Instance()) {
        fApplication->GeneratePrimaries();
      }
      if(!isInterruptible) {
@@ -1476,6 +1477,7 @@ class FastSim : public TVirtualMC
     // NOTE effectively we want to have
     //void DoStepToNextVolumeBoundary(Bool_t ignoreExternalFields = kFALSE, Args&&... args);
 
+    /*
     template <>
     void DoStepToNextVolumeBoundary<StandardInterpolation>();
     {
@@ -1483,11 +1485,11 @@ class FastSim : public TVirtualMC
       // "as if it would have interacted in the volume"-assumptions
       // Ignore arguments, but include compile time check here
     }
+    */
 
 
     /// Notify that nothing is done with this track anymore by this fast sim
     void RequestTransfer(Int_t trackId);
-
 
 
   private:

@@ -8,7 +8,10 @@ The small package is set up using CMake in a dedicated build directory via
 ```bash
 mkdir $BUILD_DIR
 cd $BUILD_DIR
-cmake $SOURCE_DIR -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DROOT_DIR=$ROOT_CMAKE_CONFIG -DVMC_DIR=$VMC_INSTALL_DIR
+cmake $SOURCE_DIR \
+      -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR \
+      -DROOT_DIR=$ROOT_CMAKE_CONFIG_DIR \
+      -DVMC_DIR=$VMC_CMAKE_CONFIG_DIR
 make && make install
 ```
 
